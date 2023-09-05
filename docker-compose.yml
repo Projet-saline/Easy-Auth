@@ -1,0 +1,122 @@
+version: "3.8"
+
+services:
+  pay-sys:
+    image: node:alpine
+    working_dir: /app
+    volumes:
+      - Pay_sys:/app
+    command: npm start
+    environment:
+      - NODE_ENV=development
+    ports:
+      - "3001:3001"
+
+  messenger:
+    image: node:alpine
+    working_dir: /app
+    volumes:
+      - Messenger:/app
+    command: npm start
+    environment:
+      - NODE_ENV=development
+    ports:
+      - "3002:3002"
+
+  gateway:
+    image: node:alpine
+    working_dir: /app
+    volumes:
+      - Gateway:/app
+    command: npm start
+    environment:
+      - NODE_ENV=development
+    ports:
+      - "3003:3003"
+
+  front:
+    image: node:alpine
+    working_dir: /app
+    volumes:
+      - Front:/app
+    command: npm start
+    environment:
+      - NODE_ENV=development
+    ports:
+      - "3000:3000"
+
+  blog:
+    image: node:alpine
+    working_dir: /app
+    volumes:
+      - Blog:/app
+    command: npm start
+    environment:
+      - NODE_ENV=development
+    ports:
+      - "3004:3004"
+
+  metrics:
+    image: node:alpine
+    working_dir: /app
+    volumes:
+      - Metrics:/app
+    command: npm start
+    environment:
+      - NODE_ENV=development
+    ports:
+      - "3005:3005"
+
+  contest:
+    image: node:alpine
+    working_dir: /app
+    volumes:
+      - Contest:/app
+    command: npm start
+    environment:
+      - NODE_ENV=development
+    ports:
+      - "3009:3009"
+
+  backOffice:
+    image: node:alpine
+    working_dir: /app
+    volumes:
+      - BackOffice:/app
+    command: npm start
+    environment:
+      - NODE_ENV=development
+    ports:
+      - "3007:3007"
+
+#  auth:
+#    image: node:alpine
+#    working_dir: /app
+#    volumes:
+#      - Auth:/app
+#    command: npm start
+#    environment:
+#      - NODE_ENV=development
+#    ports:
+#      - "3008:3008"
+
+  db:
+    image: mariadb:latest
+    volumes:
+      - db_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: my-secret-pw
+    restart: always
+    ports:
+      - "3306:3306"
+
+volumes:
+  db_data:
+  Pay_sys:
+  Messenger:
+  Gateway:
+  Front:
+  Blog:
+  Metrics:
+  Contest:
+  BackOffice:
