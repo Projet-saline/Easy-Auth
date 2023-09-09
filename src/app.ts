@@ -15,5 +15,5 @@ app.use(signupRouter);
 app.use(signoutRouter);
 
 app.listen(3009, () => {
-    console.log("Listening on port 3009!");
+    console.log("Easy-Auth listening on port 3009!");
 });
