@@ -1,8 +1,8 @@
 FROM node:alpine
-RUN apk update
-WORKDIR /usr/src/_app
+RUN apk update && apk add mysql-client
+WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm install
 COPY . .
-EXPOSE 3009
-CMD ["npm", "start"]
+EXPOSE ${APP_PORT}
+CMD [ "npm", "start" ]

@@ -1,11 +1,52 @@
 version: '3'
 services:
   app:
-    container_name: Easy-Auth
+    container_name: Gateway_API
     build:
       context: .
-      dockerfile: Dockerfile
-    environment:
-      - ${APP_PORT}
+      dockerfile: dockerfile
     ports:
-      - "3009:3009"
+      - "${APP_PORT}:${APP_PORT}"
+    depends_on:
+      - db
+    env_file:
+      - .env
+    networks:
+      - gateway-network
+
+  db:
+    container_name: Database
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASS}
+      MYSQL_DATABASE: ${DB_NAME}
+    ports:
+      - "${DB_PORT}:${DB_PORT}"
+    networks:
+      - gateway-network
+    env_file:
+      - .env
+    volumes:
+      - db-data:/var/lib/mysql
+
+  phpmyadmin:
+    container_name: Database_Admin
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: ${DB_PASS}
+    ports:
+      - "${ADMIN_PORT1}:${ADMIN_PORT2}"
+    depends_on:
+      - db
+    env_file:
+      - .env
+    networks:
+      - gateway-network
+
+networks:
+  gateway-network:
+    driver: bridge
+
+volumes:
+  db-data:
