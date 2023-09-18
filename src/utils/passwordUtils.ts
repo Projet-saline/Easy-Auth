@@ -1,13 +1,19 @@
-import  { scrypt, randomBytes} from "node:crypto";
-import { promisify } from "node:util";
+import  { scrypt, randomBytes} from "crypto";
+import { promisify } from "util";
 
 const scryptAsync = promisify(scrypt);
 
 export class PasswordUtils {
-    static hashPassword(password: string) {
+    static async hashPassword(password: string) {
         const salt = randomBytes(8).toString('hex');
+        const buf = (await scryptAsync(password, salt, 64)) as Buffer;
+
+        return `${buf.toString('hex')}.${salt}`;
     }
-    static comparePassword(storedPassword: string, suppliedPassword: string) {
-        return storedPassword === suppliedPassword;
+    static async comparePassword(storedPassword: string, suppliedPassword: string) {
+        const [hashedPassword, salt] = storedPassword.split('.');
+        const buf = (await scryptAsync(suppliedPassword, salt, 64)) as Buffer;
+
+        return buf.toString('hex') === hashedPassword;
     }
 }

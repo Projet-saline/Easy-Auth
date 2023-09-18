@@ -3,6 +3,7 @@ import { body, validationResult } from 'express-validator';
 import { RequestValidationError } from '../errors/request-validation-error';
 import User from '../models/user';
 import { BadRequestError } from '../errors/bad-request-error';
+import { PasswordUtils} from "../utils/passwordUtils";
 // import { where } from "sequelize";
 
 const router = express.Router();
@@ -41,7 +42,15 @@ router.post('/api/users/signup', [
             throw new BadRequestError('Email déjà utilisé');
         }
 
-        const user = User.build({email, password, username});
+        const existingUsername = await User.findOne({ where: { username }});
+
+        if (existingUsername) {
+            throw new BadRequestError('Nom d\'utilisateur déjà utilisé');
+        }
+
+        // Password hashed
+        const hashedPassword = await PasswordUtils.hashPassword(password);
+        const user = User.build({email, password: hashedPassword, username});
         await user.save();
 
         res.status(201).send(user);
