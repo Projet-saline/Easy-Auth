@@ -2,3 +2,5 @@ data.json
 node_modules/
 .env
 build/
+certificates/cert.pem
+certificates/key.pem
