@@ -1,6 +1,7 @@
 import { RequestHandler } from "express";
 import User from "../models/user";
 
+
 console.log(User);
 
 const getAll : RequestHandler = async (req, res) => {
@@ -32,6 +33,8 @@ const getOne : RequestHandler = async (req, res) => {
 //         .status(201)
 //         .json({message: "Utilisateur créé avec succès !", data: createdUser});
 // };
+
+
 
 const updateOne : RequestHandler = async (req, res) => {
     const {id } = req.params;

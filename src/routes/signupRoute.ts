@@ -4,7 +4,7 @@ import { RequestValidationError } from '../errors/request-validation-error';
 import User from '../models/user';
 import { BadRequestError } from '../errors/bad-request-error';
 import { PasswordUtils} from "../utils/passwordUtils";
-// import { where } from "sequelize";
+import jwt from "jsonwebtoken";
 
 const router = express.Router();
 
@@ -48,22 +48,25 @@ router.post('/api/users/signup', [
             throw new BadRequestError('Nom d\'utilisateur déjà utilisé');
         }
 
-        // Password hashed
+        // Password hashed and create user in database
         const hashedPassword = await PasswordUtils.hashPassword(password);
         const user = User.build({email, password: hashedPassword, username});
         await user.save();
 
+        // Generate JWT
+        // const  userJwt = jwt.sign({
+        //         id: user.idUser,
+        //         email: user.email
+        //     },
+        //     process.env.JWT_KEY
+        // );
+
+        // Store it on session object
+        // req.session = {
+        //     userJwt
+        // };
+
         res.status(201).send(user);
     });
-
-// Il y a plusieurs façons de valider les données d'un utilisateur.
-// Ici, on utilise express-validator pour valider les données du corps de la requête (body).
-// Pour l'utiliser, il faut l'installer avec npm install express-validator
-// et l'importer avec import { body } from 'express-validator';
-// Ensuite, on va l'utiliser comme un middleware dans la route signup.
-// On va lui passer un tableau d'objets qui vont décrire les validations à effectuer.
-// Dans les crochets, on va passer un objet pour chaque champ qu'on veut valider => on va lister les étapes de validation de ca tableau.
-// validationResults() est une fonction qui va vérifier la requête entrante à l'intérieur de notre gestionnaire de requête à chaque fois que nous exécutons le résultat.
-// Et elle va inspecter la requête et extraire toutes les informations.
 
 export { router as signupRouter };
